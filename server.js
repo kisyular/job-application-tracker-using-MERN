@@ -16,6 +16,7 @@ import errorHandlerMiddleware from './middleware/error-handler.js'
 
 //routers
 import authRoutes from './routes/authRoutes.js'
+import jobsRoutes from './routes/jobsRoutes.js'
 
 //Connect to the database
 connectDB()
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1/jobs', jobsRoutes)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
