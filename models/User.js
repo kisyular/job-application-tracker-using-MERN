@@ -40,6 +40,7 @@ const UserSchema = new mongoose.Schema({
 	},
 })
 
+// UserSchema.pre('save', async function (next)  this is a middleware which is executed before the save method is executed. It is used to hash the password before it is saved to the database.
 UserSchema.pre('save', async function () {
 	// console.log(this.modifiedPaths())
 	if (!this.isModified('password')) return
@@ -47,12 +48,14 @@ UserSchema.pre('save', async function () {
 	this.password = await bcrypt.hash(this.password, salt)
 })
 
+// UserSchema.methods.createJWT = function ()  this is a method which is used to create a JSON Web Token. It is used to create a token which is used to authenticate the user.
 UserSchema.methods.createJWT = function () {
 	return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
 		expiresIn: process.env.JWT_LIFETIME,
 	})
 }
 
+// UserSchema.methods.comparePassword = function (password)  this is a method which is used to compare the password with the hashed password in the database.
 UserSchema.methods.comparePassword = async function (candidatePassword) {
 	const isMatch = await bcrypt.compare(candidatePassword, this.password)
 	return isMatch

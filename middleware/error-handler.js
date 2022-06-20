@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 
+// class CustomAPIError extends Error {}. This is used to create a custom error class.
 const errorHandlerMiddleware = (err, req, res, next) => {
 	const defaultError = {
 		statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
