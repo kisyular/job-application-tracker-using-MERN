@@ -25,6 +25,7 @@
 	"author": "Rellika Kisyula",
 	"license": "ISC",
 	"dependencies": {
+		"bcrypt": "^5.0.1",
 		"colors": "^1.4.0",
 		"cors": "^2.8.5",
 		"dotenv": "^16.0.1",
@@ -34,6 +35,7 @@
 		"install": "^0.13.0",
 		"mongoose": "^6.3.8",
 		"nodemon": "^2.0.16",
-		"npm": "^8.12.2"
+		"npm": "^8.12.2",
+		"validator": "^13.7.0"
 	}
 }
