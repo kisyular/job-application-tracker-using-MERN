@@ -3,6 +3,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import connectDB from './db/connect.js'
 import cors from 'cors'
+import 'express-async-errors'
 
 // initialize the server
 dotenv.config()
