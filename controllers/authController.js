@@ -19,6 +19,7 @@ const register = async (req, res) => {
 	const user = await User.create({ name, email, password })
 	const token = user.createJWT() // this is used to create a JSON Web Token. It is used to create a token which is used to authenticate the user.
 
+	//Sends back user details and token to client excluding the password.
 	res.status(StatusCodes.CREATED).json({
 		user: {
 			email: user.email,
