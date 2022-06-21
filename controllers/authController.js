@@ -16,6 +16,7 @@ const register = async (req, res) => {
 	if (userAlreadyExists) {
 		throw new BadRequestError('Email already in use')
 	}
+	//const user = new User({ name, email, password }). Create a new user with the values provided in the request body in the database.
 	const user = await User.create({ name, email, password })
 	const token = user.createJWT() // this is used to create a JSON Web Token. It is used to create a token which is used to authenticate the user.
 
@@ -32,15 +33,32 @@ const register = async (req, res) => {
 	})
 }
 
-// const login = async (req, res) => {} this login function is used to login a user. It is used to login a user and create a token which is used to authenticate the user.
+// const login = async (req, res) => {} Used to login a user and create a token which is used to authenticate the user.
 const login = async (req, res) => {
 	const { email, password } = req.body
-	// this is used to check if the email and password are provided.
+	// Used to check if the email and password are provided.
 	if (!email || !password) {
 		throw new BadRequestError('Please provide all values')
 	}
+	// Used to find the user in the database. If the user is found, then it will select the user and the password.
+	const user = await User.findOne({ email }).select('+password')
+
+	// Used to check if the user is found. If the user is not found, then it will throw an error.
+	if (!user) {
+		throw new UnauthenticatedError('Invalid Credentials')
+	}
+	// Used to check if the password is correct. If the password is incorrect, then it will throw an error. It uses the comparePassword function to check if the password is correct. comparePassword comes from the User model through the bcryptjs library.
+	const isPasswordCorrect = await user.comparePassword(password)
+	if (!isPasswordCorrect) {
+		throw new UnauthenticatedError('Invalid Credentials')
+	}
+	// Used to create a JSON Web Token. It is used to create a token which is used to authenticate the user.
+	const token = user.createJWT()
+	user.password = undefined
+	res.status(StatusCodes.OK).json({ user, token, location: user.location })
 	res.send('Login')
 }
+//Login User Server Side
 
 const updateUser = async (req, res) => {
 	const { email, name, lastName, location } = req.body
