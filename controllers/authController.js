@@ -45,12 +45,12 @@ const login = async (req, res) => {
 
 	// Used to check if the user is found. If the user is not found, then it will throw an error.
 	if (!user) {
-		throw new UnauthenticatedError('Invalid Credentials')
+		throw new UnAuthenticatedError('Invalid Credentials')
 	}
 	// Used to check if the password is correct. If the password is incorrect, then it will throw an error. It uses the comparePassword function to check if the password is correct. comparePassword comes from the User model through the bcryptjs library.
 	const isPasswordCorrect = await user.comparePassword(password)
 	if (!isPasswordCorrect) {
-		throw new UnauthenticatedError('Invalid Credentials')
+		throw new UnAuthenticatedError('Invalid Credentials')
 	}
 	// Used to create a JSON Web Token. It is used to create a token which is used to authenticate the user.
 	const token = user.createJWT()

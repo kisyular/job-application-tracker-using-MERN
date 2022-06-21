@@ -8,6 +8,9 @@ import {
 	SETUP_USER_BEGIN,
 	SETUP_USER_SUCCESS,
 	SETUP_USER_ERROR,
+	LOGIN_USER_BEGIN,
+	LOGIN_USER_SUCCESS,
+	LOGIN_USER_ERROR,
 	TOGGLE_SIDEBAR,
 	LOGOUT_USER,
 	UPDATE_USER_BEGIN,
@@ -102,30 +105,20 @@ const AppProvider = ({ children }) => {
 	}
 
 	//const registerUser = (user) => {}. This function registers a new user. It sends a POST request to the server. It uses axios to send the request. A dispatch is used to update the state.
-	const registerUser = async (currentUser) => {
+	const setupUser = async ({ currentUser, endPoint, alertText }) => {
 		dispatch({ type: SETUP_USER_BEGIN })
 		try {
 			const response = await axios.post(
-				`${BASE_URL}/auth/register`,
+				`${BASE_URL}/auth/${endPoint}`,
 				currentUser
 			)
-			// console.log(response)
 			const { user, token, location } = response.data
+			console.log(response)
 			dispatch({
 				type: SETUP_USER_SUCCESS,
-				payload: {
-					user,
-					token,
-					location,
-				},
+				payload: { user, token, location, alertText },
 			})
-
-			// will add later
-			addUserToLocalStorage({
-				user,
-				token,
-				location,
-			})
+			addUserToLocalStorage({ user, token, location })
 		} catch (error) {
 			console.log(error.response)
 			dispatch({
@@ -133,7 +126,6 @@ const AppProvider = ({ children }) => {
 				payload: { msg: error.response.data.msg },
 			})
 		}
-		clearAlert()
 	}
 
 	return (
@@ -142,7 +134,7 @@ const AppProvider = ({ children }) => {
 				...state,
 				displayAlert,
 				clearAlert,
-				registerUser,
+				setupUser,
 			}}
 		>
 			{children}

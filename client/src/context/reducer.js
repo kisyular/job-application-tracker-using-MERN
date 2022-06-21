@@ -4,6 +4,12 @@ import {
 	SETUP_USER_BEGIN,
 	SETUP_USER_SUCCESS,
 	SETUP_USER_ERROR,
+	// REGISTER_USER_BEGIN,
+	// REGISTER_USER_SUCCESS,
+	// REGISTER_USER_ERROR,
+	// LOGIN_USER_BEGIN,
+	// LOGIN_USER_SUCCESS,
+	// LOGIN_USER_ERROR,
 	TOGGLE_SIDEBAR,
 	LOGOUT_USER,
 	UPDATE_USER_BEGIN,
@@ -61,7 +67,7 @@ const reducer = (state, action) => {
 			isLoading: false,
 			showAlert: true,
 			alertType: 'success',
-			alertText: 'User Created! Redirecting...',
+			alertText: action.payload.alertText,
 		}
 	}
 	if (action.type === SETUP_USER_ERROR) {
@@ -73,6 +79,7 @@ const reducer = (state, action) => {
 			alertText: action.payload.msg,
 		}
 	}
+
 	if (action.type === LOGOUT_USER) {
 		return {
 			...initialState,

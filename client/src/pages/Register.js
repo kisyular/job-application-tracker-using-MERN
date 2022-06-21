@@ -19,7 +19,7 @@ function Register() {
 
 	// global context and useNavigate
 	const navigate = useNavigate()
-	const { isLoading, showAlert, displayAlert, registerUser, user } =
+	const { isLoading, showAlert, displayAlert, user, setupUser } =
 		useAppContext()
 
 	const toggleMember = () => {
@@ -38,9 +38,17 @@ function Register() {
 		}
 		const currentUser = { name, email, password }
 		if (isMember) {
-			console.log('isMember')
+			setupUser({
+				currentUser,
+				endPoint: 'login',
+				alertText: 'Login successful!. Redirecting soon',
+			})
 		} else {
-			registerUser(currentUser)
+			setupUser({
+				currentUser,
+				endPoint: 'register',
+				alertText: 'Registration successful!. Redirecting soon',
+			})
 		}
 	}
 
