@@ -47,5 +47,40 @@ const reducer = (state, action) => {
 			alertText: '',
 		}
 	}
+
+	if (action.type === SETUP_USER_BEGIN) {
+		return { ...state, isLoading: true }
+	}
+	if (action.type === SETUP_USER_SUCCESS) {
+		return {
+			...state,
+			user: action.payload.user,
+			token: action.payload.token,
+			userLocation: action.payload.location,
+			jobLocation: action.payload.location,
+			isLoading: false,
+			showAlert: true,
+			alertType: 'success',
+			alertText: 'User Created! Redirecting...',
+		}
+	}
+	if (action.type === SETUP_USER_ERROR) {
+		return {
+			...state,
+			isLoading: false,
+			showAlert: true,
+			alertType: 'danger',
+			alertText: action.payload.msg,
+		}
+	}
+	if (action.type === LOGOUT_USER) {
+		return {
+			...initialState,
+			user: null,
+			token: null,
+			jobLocation: '',
+			userLocation: '',
+		}
+	}
 }
 export default reducer

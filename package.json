@@ -42,6 +42,7 @@
 		"install": "^0.13.0",
 		"jsonwebtoken": "^8.5.1",
 		"mongoose": "^6.3.8",
+		"morgan": "^1.10.0",
 		"nodemon": "^2.0.16",
 		"npm": "^8.12.2",
 		"validator": "^13.7.0"
