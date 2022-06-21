@@ -23,7 +23,7 @@ import jobsRoutes from './routes/jobsRoutes.js'
 connectDB()
 //Routes
 app.get('/', (req, res) => {
-	res.send('Welcome!')
+	res.json({ message: 'Welcome to the Job Board' })
 })
 
 app.use('/api/v1/auth', authRoutes)
