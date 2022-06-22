@@ -15,7 +15,7 @@ if (process.env.NODE_ENV !== 'production') {
 app.use(express.json())
 app.use(cors())
 
-// middleware
+// Import middleware.
 import notFoundMiddleware from './middleware/not-found.js'
 import errorHandlerMiddleware from './middleware/error-handler.js'
 
@@ -30,6 +30,7 @@ app.get('/', (req, res) => {
 	res.json({ message: 'Welcome to the Job Board' })
 })
 
+//Routes.
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/jobs', jobsRoutes)
 
