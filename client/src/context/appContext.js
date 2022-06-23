@@ -113,19 +113,37 @@ const AppProvider = ({ children }) => {
 				currentUser
 			)
 			const { user, token, location } = response.data
-			console.log(response)
+			// console.log(response)
 			dispatch({
 				type: SETUP_USER_SUCCESS,
 				payload: { user, token, location, alertText },
 			})
 			addUserToLocalStorage({ user, token, location })
 		} catch (error) {
-			console.log(error.response)
+			const whichError =
+				error.response.statusText === 'Internal Server Error'
 			dispatch({
 				type: SETUP_USER_ERROR,
-				payload: { msg: error.response.data.msg },
+				payload: {
+					msg: whichError ? 'Server Error' : error.response.data.msg,
+				},
 			})
 		}
+	}
+
+	//const toggleSidebar = () => {}. This function toggles the sidebar.
+	const toggleSidebar = () => {
+		dispatch({
+			type: TOGGLE_SIDEBAR,
+		})
+	}
+
+	//const logoutUser = () => {}. This function logs the user out. It removes the user from local storage.
+	const logoutUser = () => {
+		dispatch({
+			type: LOGOUT_USER,
+		})
+		removeUserFromLocalStorage()
 	}
 
 	return (
@@ -135,6 +153,8 @@ const AppProvider = ({ children }) => {
 				displayAlert,
 				clearAlert,
 				setupUser,
+				toggleSidebar,
+				logoutUser,
 			}}
 		>
 			{children}
