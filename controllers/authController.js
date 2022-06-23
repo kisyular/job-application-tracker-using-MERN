@@ -66,6 +66,7 @@ const updateUser = async (req, res) => {
 		// throw new BadRequestError('Please provide all values')
 		console.log('Please provide all values')
 	}
+	console.log(req.user)
 	res.send('Update User')
 }
 

@@ -18,6 +18,7 @@ app.use(cors())
 // Import middleware.
 import notFoundMiddleware from './middleware/not-found.js'
 import errorHandlerMiddleware from './middleware/error-handler.js'
+import authenticateUser from './middleware/auth.js'
 
 //routers
 import authRoutes from './routes/authRoutes.js'
@@ -32,7 +33,7 @@ app.get('/', (req, res) => {
 
 //Routes.
 app.use('/api/v1/auth', authRoutes)
-app.use('/api/v1/jobs', jobsRoutes)
+app.use('/api/v1/jobs', authenticateUser, jobsRoutes)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
