@@ -31,6 +31,7 @@ const Wrapper = styled.nav`
 		display: flex;
 		align-items: center;
 		color: var(--primary-500);
+		cursor: pointer;
 	}
 	@media (max-width: 992px) {
 		.toggle-btn {

@@ -24,7 +24,12 @@ const Navbar = () => {
 				<button className='toggle-btn' onClick={toggleSidebar}>
 					<FaAlignLeft />
 				</button>
-				<h3 className='toggle-greating logo-text'>{greating}</h3>
+				<h3
+					onClick={toggleSidebar}
+					className='toggle-greating logo-text'
+				>
+					{greating}
+				</h3>
 				<div>
 					<Logo />
 					<h3 className='logo-text'>dashboard</h3>
