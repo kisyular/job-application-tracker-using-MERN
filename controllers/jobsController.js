@@ -1,22 +1,24 @@
-// import Job from '../models/Job.js'
+import Job from '../models/Job.js'
 import { StatusCodes } from 'http-status-codes'
-// import {
-//   BadRequestError,
-//   NotFoundError,
-//   UnAuthenticatedError,
-// } from '../errors/index.js'
+import {
+	BadRequestError,
+	//   NotFoundError,
+	//   UnAuthenticatedError,
+} from '../errors/index.js'
 // import checkPermissions from '../utils/checkPermissions.js'
-import mongoose from 'mongoose'
 // import moment from 'moment'
 
 const createJob = async (req, res) => {
 	const { position, company } = req.body
 
 	if (!position || !company) {
-		// throw new BadRequestError('Please provide all values')
-		console.log('Please provide all values')
+		throw new BadRequestError('Please Provide All Values')
 	}
-	res.send('Create Job')
+
+	req.body.createdBy = req.user.userId
+
+	const job = await Job.create(req.body)
+	res.status(StatusCodes.CREATED).json({ job })
 }
 
 const getAllJobs = async (req, res) => {
