@@ -10,9 +10,9 @@ import {
 	SETUP_USER_ERROR,
 	TOGGLE_SIDEBAR,
 	LOGOUT_USER,
-	// UPDATE_USER_BEGIN,
-	// UPDATE_USER_SUCCESS,
-	// UPDATE_USER_ERROR,
+	UPDATE_USER_BEGIN,
+	UPDATE_USER_SUCCESS,
+	UPDATE_USER_ERROR,
 	// HANDLE_CHANGE,
 	// CLEAR_VALUES,
 	// CREATE_JOB_BEGIN,
@@ -72,6 +72,33 @@ const AppContext = React.createContext()
 const AppProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState)
 
+	const authFetch = axios.create({
+		baseURL: BASE_URL,
+	})
+
+	// request interceptor
+	authFetch.interceptors.request.use(
+		(config) => {
+			config.headers.common['Authorization'] = `Bearer ${state.token}`
+			return config
+		},
+		(error) => {
+			return Promise.reject(error)
+		}
+	)
+	// response interceptor
+	authFetch.interceptors.response.use(
+		(response) => {
+			return response
+		},
+		(error) => {
+			if (error.response.status === 401) {
+				logoutUser()
+			}
+			return Promise.reject(error)
+		}
+	)
+
 	const displayAlert = () => {
 		dispatch({
 			type: DISPLAY_ALERT,
@@ -110,7 +137,6 @@ const AppProvider = ({ children }) => {
 				currentUser
 			)
 			const { user, token, location } = response.data
-			// console.log(response)
 			dispatch({
 				type: SETUP_USER_SUCCESS,
 				payload: { user, token, location, alertText },
@@ -126,6 +152,7 @@ const AppProvider = ({ children }) => {
 				},
 			})
 		}
+		clearAlert()
 	}
 
 	//const toggleSidebar = () => {}. This function toggles the sidebar.
@@ -143,6 +170,31 @@ const AppProvider = ({ children }) => {
 		removeUserFromLocalStorage()
 	}
 
+	//const updateUser = (currentUser) => {}. This function updates the user. It sends a PUT request to the server. It uses axios to send the request. A dispatch is used to update the state.
+	const updateUser = async (currentUser) => {
+		dispatch({ type: UPDATE_USER_BEGIN })
+		try {
+			const { data } = await authFetch.patch(
+				'/auth/updateUser',
+				currentUser
+			)
+			const { user, token, location } = data
+			dispatch({
+				type: UPDATE_USER_SUCCESS,
+				payload: { user, token, location },
+			})
+			addUserToLocalStorage({ user, token, location })
+		} catch (error) {
+			if (error.response.status !== 401) {
+				dispatch({
+					type: UPDATE_USER_ERROR,
+					payload: { msg: error.response.data.msg },
+				})
+			}
+		}
+		clearAlert()
+	}
+
 	return (
 		<AppContext.Provider
 			value={{
@@ -152,6 +204,7 @@ const AppProvider = ({ children }) => {
 				setupUser,
 				toggleSidebar,
 				logoutUser,
+				updateUser,
 			}}
 		>
 			{children}

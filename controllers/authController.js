@@ -56,7 +56,6 @@ const login = async (req, res) => {
 	const token = user.createJWT()
 	user.password = undefined
 	res.status(StatusCodes.OK).json({ user, token, location: user.location })
-	res.send('Login')
 }
 
 // const updateUser = async (req, res) => {} Used to update the user details.
