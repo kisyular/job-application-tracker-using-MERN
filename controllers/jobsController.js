@@ -23,7 +23,12 @@ const createJob = async (req, res) => {
 
 const getAllJobs = async (req, res) => {
 	const { status, jobType, sort, search } = req.query
-	res.send('Get All Jobs')
+	const jobs = await Job.find({ createdBy: req.user.userId })
+	res.status(StatusCodes.OK).json({
+		jobs,
+		totalJobs: jobs.length,
+		numberOfPages: 1,
+	})
 }
 const updateJob = async (req, res) => {
 	const { id: jobId } = req.params
