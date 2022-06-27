@@ -35,7 +35,7 @@ import {
 const token = localStorage.getItem('token')
 const user = localStorage.getItem('user')
 const userLocation = localStorage.getItem('location')
-const BASE_URL = 'http://localhost:8000/api/v1'
+// const BASE_URL = 'http://localhost:8000/api/v1' // for local development
 
 const initialState = {
 	isLoading: false,
@@ -74,7 +74,7 @@ const AppProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState)
 
 	const authFetch = axios.create({
-		baseURL: BASE_URL,
+		baseURL: '/api/v1',
 	})
 
 	// request interceptor
@@ -133,11 +133,11 @@ const AppProvider = ({ children }) => {
 	const setupUser = async ({ currentUser, endPoint, alertText }) => {
 		dispatch({ type: SETUP_USER_BEGIN })
 		try {
-			const response = await axios.post(
-				`${BASE_URL}/auth/${endPoint}`,
+			const { data } = await axios.post(
+				`/api/v1/auth/${endPoint}`,
 				currentUser
 			)
-			const { user, token, location } = response.data
+			const { user, token, location } = data
 			dispatch({
 				type: SETUP_USER_SUCCESS,
 				payload: { user, token, location, alertText },
@@ -237,7 +237,7 @@ const AppProvider = ({ children }) => {
 
 	const getJobs = async () => {
 		const { page, search, searchStatus, searchType, sort } = state
-		let url = `${BASE_URL}/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`
+		let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`
 		if (search) {
 			url = url + `&search=${search}`
 		}
@@ -251,7 +251,6 @@ const AppProvider = ({ children }) => {
 			})
 		} catch (error) {
 			if (error.response.status !== 401) return
-			console.log(error)
 			logoutUser()
 		}
 		clearAlert()
@@ -300,6 +299,7 @@ const AppProvider = ({ children }) => {
 		dispatch({ type: SHOW_STATS_BEGIN })
 		try {
 			const { data } = await authFetch('/jobs/stats')
+			// console.log(data)
 			dispatch({
 				type: SHOW_STATS_SUCCESS,
 				payload: {
@@ -310,7 +310,6 @@ const AppProvider = ({ children }) => {
 		} catch (error) {
 			logoutUser()
 		}
-
 		clearAlert()
 	}
 
