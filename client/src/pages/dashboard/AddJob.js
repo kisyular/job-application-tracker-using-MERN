@@ -29,7 +29,7 @@ const AddJob = () => {
 		}
 		if (isEditing) {
 			// eventually
-			// editJob()
+			editJob()
 			return
 		}
 		createJob()

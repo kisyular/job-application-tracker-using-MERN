@@ -4,7 +4,6 @@ import { useAppContext } from '../context/appContext'
 import Wrapper from '../assets/wrappers/Job'
 import JobInfo from './JobInfo'
 import moment from 'moment'
-
 const Job = ({
 	_id,
 	position,
@@ -45,7 +44,15 @@ const Job = ({
 						<button
 							type='button'
 							className='btn delete-btn'
-							onClick={() => deleteJob(_id)}
+							onClick={() => {
+								if (
+									window.confirm(
+										'Are you sure you wish to delete this item?'
+									)
+								) {
+									deleteJob(_id)
+								}
+							}}
 						>
 							Delete
 						</button>

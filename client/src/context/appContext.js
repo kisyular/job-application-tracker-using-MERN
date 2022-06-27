@@ -21,10 +21,10 @@ import {
 	GET_JOBS_BEGIN,
 	GET_JOBS_SUCCESS,
 	SET_EDIT_JOB,
-	// DELETE_JOB_BEGIN,
-	// EDIT_JOB_BEGIN,
-	// EDIT_JOB_SUCCESS,
-	// EDIT_JOB_ERROR,
+	DELETE_JOB_BEGIN,
+	EDIT_JOB_BEGIN,
+	EDIT_JOB_SUCCESS,
+	EDIT_JOB_ERROR,
 	// SHOW_STATS_BEGIN,
 	// SHOW_STATS_SUCCESS,
 	// CLEAR_FILTERS,
@@ -255,11 +255,40 @@ const AppProvider = ({ children }) => {
 	const setEditJob = (id) => {
 		dispatch({ type: SET_EDIT_JOB, payload: { id } })
 	}
-	const editJob = () => {
-		console.log('edit job')
+
+	const deleteJob = async (jobId) => {
+		dispatch({ type: DELETE_JOB_BEGIN, payload: { jobId } })
+		try {
+			await authFetch.delete(`/jobs/${jobId}`)
+			getJobs()
+		} catch (error) {
+			if (error.response.status !== 401) return
+			logoutUser()
+		}
+		clearAlert()
 	}
-	const deleteJob = (id) => {
-		console.log(`delete : ${id}`)
+
+	const editJob = async (job) => {
+		dispatch({ type: EDIT_JOB_BEGIN })
+		try {
+			const { position, company, jobLocation, jobType, status } = state
+			await authFetch.patch(`/jobs/${state.editJobId}`, {
+				company,
+				position,
+				jobLocation,
+				jobType,
+				status,
+			})
+			dispatch({ type: EDIT_JOB_SUCCESS })
+			dispatch({ type: CLEAR_VALUES })
+		} catch (error) {
+			if (error.response.status !== 401) return
+			dispatch({
+				type: EDIT_JOB_ERROR,
+				payload: { msg: error.response.data.msg },
+			})
+		}
+		clearAlert()
 	}
 
 	return (
