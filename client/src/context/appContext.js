@@ -28,7 +28,7 @@ import {
 	SHOW_STATS_BEGIN,
 	SHOW_STATS_SUCCESS,
 	CLEAR_FILTERS,
-	// CHANGE_PAGE,
+	CHANGE_PAGE,
 } from './actions'
 
 // set as default
@@ -236,8 +236,8 @@ const AppProvider = ({ children }) => {
 	}
 
 	const getJobs = async () => {
-		const { search, searchStatus, searchType, sort } = state
-		let url = `${BASE_URL}/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`
+		const { page, search, searchStatus, searchType, sort } = state
+		let url = `${BASE_URL}/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`
 		if (search) {
 			url = url + `&search=${search}`
 		}
@@ -252,7 +252,7 @@ const AppProvider = ({ children }) => {
 		} catch (error) {
 			if (error.response.status !== 401) return
 			console.log(error)
-			// logoutUser()
+			logoutUser()
 		}
 		clearAlert()
 	}
@@ -308,8 +308,7 @@ const AppProvider = ({ children }) => {
 				},
 			})
 		} catch (error) {
-			console.log(error.response)
-			// logoutUser()
+			logoutUser()
 		}
 
 		clearAlert()
@@ -317,6 +316,10 @@ const AppProvider = ({ children }) => {
 
 	const clearFilters = () => {
 		dispatch({ type: CLEAR_FILTERS })
+	}
+
+	const changePage = (page) => {
+		dispatch({ type: CHANGE_PAGE, payload: { page } })
 	}
 
 	return (
@@ -338,6 +341,7 @@ const AppProvider = ({ children }) => {
 				editJob,
 				showStats,
 				clearFilters,
+				changePage,
 			}}
 		>
 			{children}
