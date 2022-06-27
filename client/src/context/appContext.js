@@ -25,8 +25,8 @@ import {
 	EDIT_JOB_BEGIN,
 	EDIT_JOB_SUCCESS,
 	EDIT_JOB_ERROR,
-	// SHOW_STATS_BEGIN,
-	// SHOW_STATS_SUCCESS,
+	SHOW_STATS_BEGIN,
+	SHOW_STATS_SUCCESS,
 	// CLEAR_FILTERS,
 	// CHANGE_PAGE,
 } from './actions'
@@ -291,6 +291,25 @@ const AppProvider = ({ children }) => {
 		clearAlert()
 	}
 
+	const showStats = async () => {
+		dispatch({ type: SHOW_STATS_BEGIN })
+		try {
+			const { data } = await authFetch('/jobs/stats')
+			dispatch({
+				type: SHOW_STATS_SUCCESS,
+				payload: {
+					stats: data.defaultStats,
+					monthlyApplications: data.monthlyApplications,
+				},
+			})
+		} catch (error) {
+			console.log(error.response)
+			// logoutUser()
+		}
+
+		clearAlert()
+	}
+
 	return (
 		<AppContext.Provider
 			value={{
@@ -308,6 +327,7 @@ const AppProvider = ({ children }) => {
 				setEditJob,
 				deleteJob,
 				editJob,
+				showStats,
 			}}
 		>
 			{children}
