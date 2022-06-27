@@ -27,7 +27,7 @@ import {
 	EDIT_JOB_ERROR,
 	SHOW_STATS_BEGIN,
 	SHOW_STATS_SUCCESS,
-	// CLEAR_FILTERS,
+	CLEAR_FILTERS,
 	// CHANGE_PAGE,
 } from './actions'
 
@@ -54,7 +54,7 @@ const initialState = {
 	jobTypeOptions: ['full-time', 'part-time', 'remote', 'internship'],
 	jobType: 'full-time',
 	// statusOptions: ['••• pending', '➜ interview', '✘ declined', '✔︎ accepted'],
-	statusOptions: ['pending', 'interview', 'declined', '✔accepted'],
+	statusOptions: ['pending', 'interview', 'declined', 'accepted'],
 	status: 'pending',
 	jobs: [],
 	totalJobs: 0,
@@ -236,7 +236,11 @@ const AppProvider = ({ children }) => {
 	}
 
 	const getJobs = async () => {
-		let url = `${BASE_URL}/jobs`
+		const { search, searchStatus, searchType, sort } = state
+		let url = `${BASE_URL}/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`
+		if (search) {
+			url = url + `&search=${search}`
+		}
 		dispatch({ type: GET_JOBS_BEGIN })
 		try {
 			const { data } = await authFetch.get(url)
@@ -311,6 +315,10 @@ const AppProvider = ({ children }) => {
 		clearAlert()
 	}
 
+	const clearFilters = () => {
+		dispatch({ type: CLEAR_FILTERS })
+	}
+
 	return (
 		<AppContext.Provider
 			value={{
@@ -329,6 +337,7 @@ const AppProvider = ({ children }) => {
 				deleteJob,
 				editJob,
 				showStats,
+				clearFilters,
 			}}
 		>
 			{children}
