@@ -129,7 +129,7 @@ const reducer = (state, action) => {
 			company: '',
 			jobLocation: state.userLocation,
 			jobType: 'full-time',
-			status: '••• pending',
+			status: 'pending',
 		}
 		return { ...state, ...initialState }
 	}
