@@ -35,7 +35,7 @@ import {
 const token = localStorage.getItem('token')
 const user = localStorage.getItem('user')
 const userLocation = localStorage.getItem('location')
-// const BASE_URL = 'http://localhost:8000/api/v1' // for local development
+const BASE_URL = 'https://rjobify.herokuapp.com/api/v1'
 
 const initialState = {
 	isLoading: false,
@@ -74,7 +74,7 @@ const AppProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState)
 
 	const authFetch = axios.create({
-		baseURL: '/api/v1',
+		baseURL: BASE_URL,
 	})
 
 	// request interceptor
@@ -134,7 +134,7 @@ const AppProvider = ({ children }) => {
 		dispatch({ type: SETUP_USER_BEGIN })
 		try {
 			const { data } = await axios.post(
-				`/api/v1/auth/${endPoint}`,
+				`${BASE_URL}/auth/${endPoint}`,
 				currentUser
 			)
 			const { user, token, location } = data
